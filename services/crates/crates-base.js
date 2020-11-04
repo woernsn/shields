@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { nonNegativeInteger } = require('../validators')
 const { BaseJsonService } = require('..')
 
@@ -41,9 +41,7 @@ const errorSchema = Joi.object({
 const schema = Joi.alternatives(crateSchema, versionSchema, errorSchema)
 
 class BaseCratesService extends BaseJsonService {
-  static get defaultBadgeData() {
-    return { label: 'crates.io' }
-  }
+  static defaultBadgeData = { label: 'crates.io' }
 
   async fetch({ crate, version }) {
     const url = version

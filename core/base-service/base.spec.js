@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const chai = require('chai')
 const { expect } = chai
 const sinon = require('sinon')
@@ -29,32 +29,19 @@ const queryParamSchema = Joi.object({
   .required()
 
 class DummyService extends BaseService {
-  static get category() {
-    return 'other'
-  }
+  static category = 'other'
+  static route = { base: 'foo', pattern: ':namedParamA', queryParamSchema }
 
-  static get route() {
-    return {
-      base: 'foo',
-      pattern: ':namedParamA',
-      queryParamSchema,
-    }
-  }
+  static examples = [
+    {
+      pattern: ':world',
+      namedParams: { world: 'World' },
+      staticPreview: this.render({ namedParamA: 'foo', queryParamA: 'bar' }),
+      keywords: ['hello'],
+    },
+  ]
 
-  static get examples() {
-    return [
-      {
-        pattern: ':world',
-        namedParams: { world: 'World' },
-        staticPreview: this.render({ namedParamA: 'foo', queryParamA: 'bar' }),
-        keywords: ['hello'],
-      },
-    ]
-  }
-
-  static get defaultBadgeData() {
-    return { label: 'cat', namedLogo: 'appveyor' }
-  }
+  static defaultBadgeData = { label: 'cat', namedLogo: 'appveyor' }
 
   static render({ namedParamA, queryParamA }) {
     return {
@@ -68,9 +55,7 @@ class DummyService extends BaseService {
 }
 
 class DummyServiceWithServiceResponseSizeMetricEnabled extends DummyService {
-  static get enabledMetrics() {
-    return [MetricNames.SERVICE_RESPONSE_SIZE]
-  }
+  static enabledMetrics = [MetricNames.SERVICE_RESPONSE_SIZE]
 }
 
 describe('BaseService', function () {
@@ -124,9 +109,7 @@ describe('BaseService', function () {
     })
 
     class WithRoute extends BaseService {
-      static get route() {
-        return {}
-      }
+      static route = {}
     }
     it('Should throw if handle() is not overridden', function () {
       return expect(WithRoute.invoke({}, {}, {})).to.be.rejectedWith(
@@ -390,9 +373,10 @@ describe('BaseService', function () {
       const expectedFormat = 'svg'
       expect(mockSendBadge).to.have.been.calledOnce
       expect(mockSendBadge).to.have.been.calledWith(expectedFormat, {
-        text: ['cat', 'Hello namedParamA: bar with queryParamA: ?'],
+        label: 'cat',
+        message: 'Hello namedParamA: bar with queryParamA: ?',
         color: 'lightgrey',
-        template: 'flat',
+        style: 'flat',
         namedLogo: undefined,
         logo: undefined,
         logoWidth: undefined,
@@ -567,12 +551,10 @@ describe('BaseService', function () {
   })
   describe('auth', function () {
     class AuthService extends DummyService {
-      static get auth() {
-        return {
-          passKey: 'myci_pass',
-          serviceKey: 'myci',
-          isRequired: true,
-        }
+      static auth = {
+        passKey: 'myci_pass',
+        serviceKey: 'myci',
+        isRequired: true,
       }
 
       async handle() {

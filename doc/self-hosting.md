@@ -184,9 +184,14 @@ Start the server using the Sentry DSN. You can set it:
 sudo SENTRY_DSN=https://xxx:yyy@sentry.io/zzz node server
 ```
 
-- or by `sentry_dsn` secret property defined in `private/secret.json`
+Or via config as you would do with [server secrets](server-secrets.md):
 
+```yml
+private:
+  sentry_dsn: ...
 ```
+
+```sh
 sudo node server
 ```
 
@@ -200,3 +205,9 @@ METRICS_PROMETHEUS_ENABLED=true npm start
 ```
 
 Metrics are available at `/metrics` resource.
+
+### Cloudflare
+
+Shields uses Cloudflare as a downstream CDN. If your installation does the same,
+you can configure your server to only accept requests coming from Cloudflare's IPs.
+Set `public.requireCloudflare: true`.

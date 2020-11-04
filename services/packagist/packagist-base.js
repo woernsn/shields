@@ -1,12 +1,13 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { BaseJsonService } = require('..')
 
 const packageSchema = Joi.object()
   .pattern(
     /^/,
     Joi.object({
+      'default-branch': Joi.bool(),
       version: Joi.string(),
       require: Joi.object({
         php: Joi.string(),
@@ -72,6 +73,13 @@ class BasePackagistService extends BaseJsonService {
       schema,
       url,
     })
+  }
+
+  getDefaultBranch(json, user, repo) {
+    const packageName = this.getPackageName(user, repo)
+    return Object.values(json.packages[packageName]).find(
+      b => b['default-branch'] === true
+    )
   }
 
   getPackageName(user, repo) {

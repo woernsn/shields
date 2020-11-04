@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { isBuildStatus, renderBuildStatusBadge } = require('../build-status')
 const { BaseSvgScrapingService, redirector } = require('..')
 
@@ -20,40 +20,31 @@ const documentation = `
 const vcsTypeMap = { gh: 'gh', github: 'gh', bb: 'bb', bitbucket: 'bb' }
 
 class CircleCi extends BaseSvgScrapingService {
-  static get category() {
-    return 'build'
+  static category = 'build'
+  static route = {
+    base: 'circleci/build',
+    pattern: ':vcsType(github|gh|bitbucket|bb)/:user/:repo/:branch*',
+    queryParamSchema,
   }
 
-  static get route() {
-    return {
-      base: 'circleci/build',
-      pattern: ':vcsType(github|gh|bitbucket|bb)/:user/:repo/:branch*',
-      queryParamSchema,
-    }
-  }
-
-  static get examples() {
-    return [
-      {
-        title: 'CircleCI',
-        namedParams: {
-          vcsType: 'github',
-          user: 'RedSparr0w',
-          repo: 'node-csgo-parser',
-          branch: 'master',
-        },
-        queryParams: {
-          token: 'abc123def456',
-        },
-        staticPreview: this.render({ status: 'success' }),
-        documentation,
+  static examples = [
+    {
+      title: 'CircleCI',
+      namedParams: {
+        vcsType: 'github',
+        user: 'RedSparr0w',
+        repo: 'node-csgo-parser',
+        branch: 'master',
       },
-    ]
-  }
+      queryParams: {
+        token: 'abc123def456',
+      },
+      staticPreview: this.render({ status: 'success' }),
+      documentation,
+    },
+  ]
 
-  static get defaultBadgeData() {
-    return { label: 'build' }
-  }
+  static defaultBadgeData = { label: 'build' }
 
   static render({ status }) {
     return renderBuildStatusBadge({ status: status.replace('_', ' ') })

@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { BaseJsonService, InvalidParameter, InvalidResponse } = require('..')
 
 // https://uptimerobot.com/api
@@ -39,9 +39,7 @@ const singleMonitorResponseWithUptime = Joi.alternatives(
 )
 
 module.exports = class UptimeRobotBase extends BaseJsonService {
-  static get category() {
-    return 'monitoring'
-  }
+  static category = 'monitoring'
 
   static ensureIsMonitorApiKey(value) {
     // A monitor API key must start with "m".

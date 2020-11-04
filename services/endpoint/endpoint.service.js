@@ -1,7 +1,7 @@
 'use strict'
 
 const { URL } = require('url')
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { errorMessages } = require('../dynamic-common')
 const { optionalUrl } = require('../validators')
 const { fetchEndpointData } = require('../endpoint-common')
@@ -14,27 +14,15 @@ const queryParamSchema = Joi.object({
 }).required()
 
 module.exports = class Endpoint extends BaseJsonService {
-  static get category() {
-    return 'dynamic'
+  static category = 'dynamic'
+  static route = {
+    base: 'endpoint',
+    pattern: '',
+    queryParamSchema,
   }
 
-  static get route() {
-    return {
-      base: 'endpoint',
-      pattern: '',
-      queryParamSchema,
-    }
-  }
-
-  static get _cacheLength() {
-    return 300
-  }
-
-  static get defaultBadgeData() {
-    return {
-      label: 'custom badge',
-    }
-  }
+  static _cacheLength = 300
+  static defaultBadgeData = { label: 'custom badge' }
 
   static render({
     isError,

@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { nonNegativeInteger } = require('../validators')
 const { isBuildStatus } = require('../build-status')
 const { BaseJsonService } = require('..')
@@ -21,9 +21,7 @@ const schema = Joi.object({
 }).required()
 
 module.exports = class AppVeyorBase extends BaseJsonService {
-  static get category() {
-    return 'build'
-  }
+  static category = 'build'
 
   async fetch({ user, repo, branch }) {
     let url = `https://ci.appveyor.com/api/projects/${user}/${repo}`

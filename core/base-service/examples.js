@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { pathToRegexp, compile } = require('path-to-regexp')
 const categories = require('../../services/categories')
 const coalesceBadge = require('./coalesce-badge')
@@ -124,12 +124,7 @@ function transformExample(inExample, index, ServiceClass) {
     documentation,
   } = validateExample(inExample, index, ServiceClass)
 
-  const {
-    text: [label, message],
-    color,
-    template: style,
-    namedLogo,
-  } = coalesceBadge(
+  const { label, message, color, style, namedLogo } = coalesceBadge(
     {},
     staticPreview,
     ServiceClass.defaultBadgeData,

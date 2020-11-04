@@ -116,17 +116,10 @@ const { BaseService } = require('..')
 // (3)
 module.exports = class Example extends BaseService {
   // (4)
-  static get category() {
-    return 'build'
-  }
+  static category = 'build'
 
   // (5)
-  static get route() {
-    return {
-      base: 'example',
-      pattern: ':text',
-    }
-  }
+  static route = { base: 'example', pattern: ':text' }
 
   // (6)
   async handle({ text }) {
@@ -186,7 +179,7 @@ const { renderVersionBadge } = require('..//version')
 const { BaseJsonService } = require('..')
 
 // (4)
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const schema = Joi.object({
   version: Joi.string().required(),
 }).required()
@@ -194,22 +187,13 @@ const schema = Joi.object({
 // (5)
 module.exports = class GemVersion extends BaseJsonService {
   // (6)
-  static get category() {
-    return 'version'
-  }
+  static category = 'version'
 
   // (7)
-  static get route() {
-    return {
-      base: 'gem/v',
-      pattern: ':gem',
-    }
-  }
+  static route = { base: 'gem/v', pattern: ':gem' }
 
   // (8)
-  static get defaultBadgeData() {
-    return { label: 'gem' }
-  }
+  static defaultBadgeData = { label: 'gem' }
 
   // (11)
   static render({ version }) {
@@ -298,23 +282,19 @@ Once we have implemented our badge, we can add it to the index so that users can
 module.exports = class GemVersion extends BaseJsonService {
   // ...
 
-  static get category() {
-    // (1)
-    return 'version'
-  }
+  // (1)
+  static category = 'version'
 
-  static get examples() {
-    // (2)
-    return [
-      {
-        // (3)
-        title: 'Gem',
-        namedParams: { gem: 'formatador' },
-        staticPreview: this.render({ version: '2.1.0' }),
-        keywords: ['ruby'],
-      },
-    ]
-  }
+  // (2)
+  static examples = [
+    {
+      // (3)
+      title: 'Gem',
+      namedParams: { gem: 'formatador' },
+      staticPreview: this.render({ version: '2.1.0' }),
+      keywords: ['ruby'],
+    },
+  ]
 }
 ```
 
@@ -331,7 +311,7 @@ Save, run `npm start`, and you can see it [locally](http://127.0.0.1:3000/).
 
 If you update `examples`, you don't have to restart the server. Run `npm run defs` in another terminal window and the frontend will update.
 
-### (4.5) Write Tests <!-- Change the link below when you change the heading -->
+### (4.5) Write Tests<!-- Change the link below when you change the heading -->
 
 [write tests]: #45-write-tests
 

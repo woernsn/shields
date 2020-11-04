@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { renderVersionBadge } = require('../version')
 const { BaseJsonService, NotFound } = require('..')
 
@@ -10,29 +10,17 @@ const cdnjsSchema = Joi.object({
 }).required()
 
 module.exports = class Cdnjs extends BaseJsonService {
-  static get category() {
-    return 'version'
-  }
+  static category = 'version'
+  static route = { base: 'cdnjs/v', pattern: ':library' }
 
-  static get route() {
-    return {
-      base: 'cdnjs/v',
-      pattern: ':library',
-    }
-  }
+  static examples = [
+    {
+      namedParams: { library: 'jquery' },
+      staticPreview: this.render({ version: '1.5.2' }),
+    },
+  ]
 
-  static get examples() {
-    return [
-      {
-        namedParams: { library: 'jquery' },
-        staticPreview: this.render({ version: '1.5.2' }),
-      },
-    ]
-  }
-
-  static get defaultBadgeData() {
-    return { label: 'cdnjs' }
-  }
+  static defaultBadgeData = { label: 'cdnjs' }
 
   static render({ version }) {
     return renderVersionBadge({ version })

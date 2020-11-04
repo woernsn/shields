@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { optionalUrl } = require('../validators')
 const { isDependencyMap } = require('../package-json-helpers')
 const { BaseJsonService, InvalidResponse, NotFound } = require('..')
@@ -39,8 +39,9 @@ const queryParamSchema = Joi.object({
 // Abstract class for NPM badges which display data about the latest version
 // of a package.
 module.exports = class NpmBase extends BaseJsonService {
-  static get auth() {
-    return { passKey: 'npm_token', serviceKey: 'npm' }
+  static auth = {
+    passKey: 'npm_token',
+    serviceKey: 'npm',
   }
 
   static buildRoute(base, { withTag } = {}) {

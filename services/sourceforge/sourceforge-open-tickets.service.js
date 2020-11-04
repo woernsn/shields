@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { metric } = require('../text-formatters')
 const { nonNegativeInteger } = require('../validators')
 const { BaseJsonService } = require('..')
@@ -10,35 +10,27 @@ const schema = Joi.object({
 }).required()
 
 module.exports = class SourceforgeOpenTickets extends BaseJsonService {
-  static get category() {
-    return 'other'
+  static category = 'other'
+
+  static route = {
+    base: 'sourceforge/open-tickets',
+    pattern: ':project/:type(bugs|feature-requests)',
   }
 
-  static get route() {
-    return {
-      base: 'sourceforge/open-tickets',
-      pattern: ':project/:type(bugs|feature-requests)',
-    }
-  }
-
-  static get examples() {
-    return [
-      {
-        title: 'Sourceforge Open Tickets',
-        namedParams: {
-          type: 'bugs',
-          project: 'sevenzip',
-        },
-        staticPreview: this.render({ count: 1338 }),
+  static examples = [
+    {
+      title: 'Sourceforge Open Tickets',
+      namedParams: {
+        type: 'bugs',
+        project: 'sevenzip',
       },
-    ]
-  }
+      staticPreview: this.render({ count: 1338 }),
+    },
+  ]
 
-  static get defaultBadgeData() {
-    return {
-      label: 'open tickets',
-      color: 'blue',
-    }
+  static defaultBadgeData = {
+    label: 'open tickets',
+    color: 'blue',
   }
 
   static render({ count }) {

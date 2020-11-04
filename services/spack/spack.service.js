@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { renderVersionBadge } = require('..//version')
 const { BaseJsonService } = require('..')
 const schema = Joi.object({
@@ -8,31 +8,23 @@ const schema = Joi.object({
 }).required()
 
 module.exports = class SpackVersion extends BaseJsonService {
-  static get category() {
-    return 'version'
+  static category = 'version'
+
+  static route = {
+    base: 'spack/v',
+    pattern: ':packageName',
   }
 
-  static get route() {
-    return {
-      base: 'spack/v',
-      pattern: ':packageName',
-    }
-  }
+  static examples = [
+    {
+      title: 'Spack',
+      namedParams: { packageName: 'adios2' },
+      staticPreview: this.render({ version: '2.3.1' }),
+      keywords: ['hpc'],
+    },
+  ]
 
-  static get examples() {
-    return [
-      {
-        title: 'Spack',
-        namedParams: { packageName: 'adios2' },
-        staticPreview: this.render({ version: '2.3.1' }),
-        keywords: ['hpc'],
-      },
-    ]
-  }
-
-  static get defaultBadgeData() {
-    return { label: 'spack' }
-  }
+  static defaultBadgeData = { label: 'spack' }
 
   static render({ version }) {
     return renderVersionBadge({ version })

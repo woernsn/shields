@@ -6,30 +6,18 @@ const { redirector, NotFound } = require('..')
 const BaseChromeWebStoreService = require('./chrome-web-store-base')
 
 class ChromeWebStoreUsers extends BaseChromeWebStoreService {
-  static get category() {
-    return 'downloads'
-  }
+  static category = 'downloads'
+  static route = { base: 'chrome-web-store/users', pattern: ':storeId' }
 
-  static get route() {
-    return {
-      base: 'chrome-web-store/users',
-      pattern: ':storeId',
-    }
-  }
+  static examples = [
+    {
+      title: 'Chrome Web Store',
+      namedParams: { storeId: 'ogffaloegjglncjfehdfplabnoondfjo' },
+      staticPreview: this.render({ downloads: 573 }),
+    },
+  ]
 
-  static get examples() {
-    return [
-      {
-        title: 'Chrome Web Store',
-        namedParams: { storeId: 'ogffaloegjglncjfehdfplabnoondfjo' },
-        staticPreview: this.render({ downloads: 573 }),
-      },
-    ]
-  }
-
-  static get defaultBadgeData() {
-    return { label: 'users' }
-  }
+  static defaultBadgeData = { label: 'users' }
 
   static render({ downloads }) {
     return {
@@ -39,13 +27,12 @@ class ChromeWebStoreUsers extends BaseChromeWebStoreService {
   }
 
   async handle({ storeId }) {
-    const data = await this.fetch({ storeId })
-    if (!data.interactionCount || !data.interactionCount.UserDownloads) {
-      throw new NotFound({ prettyMessage: 'count not found' })
+    const chromeWebStore = await this.fetch({ storeId })
+    const downloads = chromeWebStore.users()
+    if (downloads == null) {
+      throw new NotFound({ prettyMessage: 'not found' })
     }
-    return this.constructor.render({
-      downloads: data.interactionCount.UserDownloads,
-    })
+    return this.constructor.render({ downloads })
   }
 }
 

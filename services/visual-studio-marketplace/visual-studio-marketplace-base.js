@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const validate = require('../../core/base-service/validate')
 const { BaseJsonService, NotFound } = require('..')
 
@@ -22,7 +22,7 @@ const extensionQuerySchema = Joi.object({
               versions: Joi.array()
                 .items(
                   Joi.object({
-                    version: Joi.string().regex(/^(\d+\.\d+\.\d+)(\.\d+)?$/),
+                    version: Joi.string().required(),
                   })
                 )
                 .min(1)

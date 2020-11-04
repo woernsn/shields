@@ -1,6 +1,6 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const { BaseSvgScrapingService } = require('..')
 const { isValidGrade, gradeColor } = require('./codefactor-helpers')
 
@@ -9,37 +9,26 @@ const schema = Joi.object({
 }).required()
 
 module.exports = class CodeFactorGrade extends BaseSvgScrapingService {
-  static get category() {
-    return 'analysis'
+  static category = 'analysis'
+  static route = {
+    base: 'codefactor/grade',
+    pattern: ':vcsType(github|bitbucket)/:user/:repo/:branch*',
   }
 
-  static get route() {
-    return {
-      base: 'codefactor/grade',
-      pattern: ':vcsType(github|bitbucket)/:user/:repo/:branch*',
-    }
-  }
-
-  static get examples() {
-    return [
-      {
-        title: 'CodeFactor Grade',
-        namedParams: {
-          vcsType: 'github',
-          user: 'pallets',
-          repo: 'flask',
-          branch: 'master',
-        },
-        staticPreview: this.render({ grade: 'B+' }),
+  static examples = [
+    {
+      title: 'CodeFactor Grade',
+      namedParams: {
+        vcsType: 'github',
+        user: 'pallets',
+        repo: 'flask',
+        branch: 'master',
       },
-    ]
-  }
+      staticPreview: this.render({ grade: 'B+' }),
+    },
+  ]
 
-  static get defaultBadgeData() {
-    return {
-      label: 'code quality',
-    }
-  }
+  static defaultBadgeData = { label: 'code quality' }
 
   static render({ grade }) {
     return {
